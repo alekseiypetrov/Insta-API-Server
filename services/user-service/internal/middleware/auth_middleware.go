@@ -6,20 +6,34 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// AuthMiddleware - метод проверяет токен пользователя
-func AuthMiddleware(m *jwt.JWTManager) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		tokenString := c.GetHeader("Authorization")
-		if tokenString == "" {
-			c.AbortWithStatus(401)
-		}
+const (
+	headerOfToken    = "Authorization"
+	contextUserIDKey = "user_id"
+	bearerPrefix     = "Bearer "
+)
 
-		user_id, error := m.VerifyToken(tokenString) //jwt.ParseToken(tokenString)
-		if error != nil {
-			c.AbortWithStatus(401)
+// AuthMiddleware - метод проверяет токен пользователя
+func AuthMiddleware(m *jwt.Manager) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		authHeader := c.GetHeader(headerOfToken)
+		if authHeader == "" || len(authHeader) < len(bearerPrefix) || authHeader[:len(bearerPrefix)] != bearerPrefix {
+			c.AbortWithStatusJSON(401, gin.H{
+				"error": "unauthorized",
+			})
 			return
 		}
-		c.AddParam("user_id", string(user_id))
+
+		tokenString := authHeader[len(bearerPrefix):]
+
+		userID, err := m.VerifyToken(tokenString)
+		if err != nil {
+			c.AbortWithStatusJSON(401, gin.H{
+				"error": "invalid token",
+			})
+			return
+		}
+
+		c.Set(contextUserIDKey, userID)
 		c.Next()
 	}
 }

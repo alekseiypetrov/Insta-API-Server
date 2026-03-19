@@ -24,4 +24,9 @@
 # Go workspace file
 go.work
 
+# Hide secrets
+.env
+.env.*
+!.env.example
+
 # End of https://www.toptal.com/developers/gitignore/api/go

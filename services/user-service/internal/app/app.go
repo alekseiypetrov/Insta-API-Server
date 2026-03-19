@@ -29,7 +29,7 @@ func NewApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	jwtManager := jwt.NewJWTManager(envConfig.JWTSecret)
+	jwtManager := jwt.NewManager(envConfig.JWTSecret)
 	userRepo := repository.NewUserRepository(db)
 	authService := service.NewAuthService(userRepo, jwtManager)
 	userService := service.NewUserService(userRepo)

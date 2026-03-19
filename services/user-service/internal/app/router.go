@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func setupRoutes(r *gin.Engine, h *handler.UserHandler, m *jwt.JWTManager) {
+func setupRoutes(r *gin.Engine, h *handler.UserHandler, m *jwt.Manager) {
 	{
 		auth := r.Group("/auth")
 		auth.POST("/login", h.LoginUser)

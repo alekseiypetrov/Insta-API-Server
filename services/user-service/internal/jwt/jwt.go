@@ -21,7 +21,7 @@ func NewManager(secret string) *Manager {
 }
 
 // GenerateToken - создает JWT-токен
-func (m *Manager) GenerateToken(userID uint) (string, error) {
+func (m *Manager) GenerateToken(userID string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"exp":     time.Now().Add(48 * time.Hour).Unix(),
@@ -31,7 +31,7 @@ func (m *Manager) GenerateToken(userID uint) (string, error) {
 }
 
 // VerifyToken - разборка и проверка токена
-func (m *Manager) VerifyToken(tokenString string) (int, error) {
+func (m *Manager) VerifyToken(tokenString string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method %v", token.Header["alg"])
@@ -41,20 +41,20 @@ func (m *Manager) VerifyToken(tokenString string) (int, error) {
 
 	switch {
 	case err != nil:
-		return 0, err
+		return "", err
 	case !token.Valid:
-		return 0, fmt.Errorf("invalid token")
+		return "", fmt.Errorf("invalid token")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return 0, fmt.Errorf("invalid claims")
+		return "", fmt.Errorf("invalid claims")
 	}
 
-	userIDFloat, ok := claims["user_id"].(float64)
+	userID, ok := claims["user_id"].(string)
 	if !ok {
-		return 0, fmt.Errorf("user_id not found")
+		return "", fmt.Errorf("user_id not found")
 	}
 
-	return int(userIDFloat), nil
+	return userID, nil
 }

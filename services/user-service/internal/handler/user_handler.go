@@ -95,36 +95,74 @@ func (h *UserHandler) LoginUser(c *gin.Context) {
 	c.JSON(200, gin.H{"token": token})
 }
 
-// TODO: - Will be done later
-
-// GetFollowing - метод, возвращающий количество подписчиков
-func (h *UserHandler) GetFollowing(c *gin.Context) {
-	id := c.Param("id")
-	c.JSON(200, gin.H{
-		"id":      id,
-		"message": "ok",
-	})
-}
-
 // SetFollow - метод, выполняющий подписку
 func (h *UserHandler) SetFollow(c *gin.Context) {
-	id := c.Param("id")
-	c.JSON(200, gin.H{
-		"id":      id,
-		"message": "ok",
-	})
+	id, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	followerID, ok := id.(string)
+	if !ok {
+		c.JSON(500, gin.H{"error": "internal error"})
+		return
+	}
+
+	targetID := c.Param("id")
+	if _, err := h.userService.GetByID(targetID); err != nil {
+		c.JSON(404, gin.H{"error": "user not found"})
+		return
+	}
+
+	if err := h.userService.FollowUser(followerID, targetID); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{"message": "ok"})
 }
 
 // DeleteFollow - метод, выполняющий отписку
 func (h *UserHandler) DeleteFollow(c *gin.Context) {
-	id := c.Param("id")
-	c.JSON(200, gin.H{
-		"id":      id,
-		"message": "ok",
-	})
-}
+	id, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
 
-// UpdateAvatar - метод, обновляющий аватар пользователя
-func (h *UserHandler) UpdateAvatar(c *gin.Context) {
+	followerID, ok := id.(string)
+	if !ok {
+		c.JSON(500, gin.H{"error": "internal error"})
+		return
+	}
+
+	targetID := c.Param("id")
+	if _, err := h.userService.GetByID(targetID); err != nil {
+		c.JSON(404, gin.H{"error": "user not found"})
+		return
+	}
+
+	if err := h.userService.UnfollowUser(followerID, targetID); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(200, gin.H{"message": "ok"})
 }
+
+// TODO: - Will be done later
+
+// UpdateAvatar - метод, обновляющий аватар пользователя
+// func (h *UserHandler) UpdateAvatar(c *gin.Context) {
+// 	c.JSON(200, gin.H{"message": "ok"})
+// }
+
+// GetFollowing - метод, возвращающий количество подписчиков
+// func (h *UserHandler) GetFollowing(c *gin.Context) {
+// 	id := c.Param("id")
+// 	c.JSON(200, gin.H{
+// 		"id":      id,
+// 		"message": "ok",
+// 	})
+// }

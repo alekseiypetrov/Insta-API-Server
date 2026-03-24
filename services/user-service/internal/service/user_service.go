@@ -38,16 +38,51 @@ func (s *UserService) GetByID(userID string) (model.User, error) {
 	return user, nil
 }
 
+// FollowUser - метод, оформляющий подписку на пользователя
+func (s *UserService) FollowUser(followerID, targetID string) error {
+	if followerID == targetID {
+		return fmt.Errorf("cannot follow yourself")
+	}
+
+	myID, err := primitive.ObjectIDFromHex(followerID)
+	if err != nil {
+		return fmt.Errorf("invalid user id")
+	}
+	otherID, err := primitive.ObjectIDFromHex(targetID)
+	if err != nil {
+		return fmt.Errorf("invalid user id")
+	}
+
+	if err := s.userRepo.InsertFollow(myID, otherID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// UnfollowUser - метод, обратный FollowUser
+func (s *UserService) UnfollowUser(firstID, secondID string) error {
+	if firstID == secondID {
+		return fmt.Errorf("cannot unfollow yourself")
+	}
+
+	myID, err := primitive.ObjectIDFromHex(firstID)
+	if err != nil {
+		return fmt.Errorf("invalid user id")
+	}
+	otherID, err := primitive.ObjectIDFromHex(secondID)
+	if err != nil {
+		return fmt.Errorf("invalid user id")
+	}
+
+	if err := s.userRepo.DeleteFollow(myID, otherID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // TODO: - Will be done later
 
 // UpdateAvatar - метод, обновляющий аватар пользователя
-func (s *UserService) UpdateAvatar() {}
-
-// FollowUser - метод, оформляющий подписку на пользователя
-func (s *UserService) FollowUser() {}
-
-// UnfollowUser - метод, обратный FollowUser
-func (s *UserService) UnfollowUser() {}
-
-// GetFollowers - метод, возвращающий подписчиков
-func (s *UserService) GetFollowers() {}
+// func (s *UserService) UpdateAvatar() {}

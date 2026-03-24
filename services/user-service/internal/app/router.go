@@ -18,12 +18,12 @@ func setupRoutes(r *gin.Engine, h *handler.UserHandler, m *jwt.Manager) {
 	{
 		users := r.Group("/users")
 		users.GET("/:id", h.GetUser)
-		users.GET("/:id/following", h.GetFollowing)
+		// users.GET("/:id/following", h.GetFollowing)
 
 		authUsers := users.Group("")
 		authUsers.Use(middleware.AuthMiddleware(m))
 		authUsers.GET("/me", h.GetMe)
-		authUsers.PUT("/me/avatar", h.UpdateAvatar)
+		// authUsers.PUT("/me/avatar", h.UpdateAvatar)
 		authUsers.POST("/:id/follow", h.SetFollow)
 		authUsers.DELETE("/:id/follow", h.DeleteFollow)
 	}

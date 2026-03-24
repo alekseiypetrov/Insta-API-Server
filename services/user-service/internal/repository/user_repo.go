@@ -112,56 +112,44 @@ func (r *UserRepository) InsertFollow(followerID, targetID primitive.ObjectID) e
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	client := r.collection.Database().Client()
+	var (
+		filter primitive.M
+		update primitive.D
+	)
 
-	session, err := client.StartSession()
+	filter = bson.M{
+		"_id":       followerID,
+		"following": bson.M{"$ne": targetID},
+	}
+	update = bson.D{
+		{Key: "$addToSet", Value: bson.D{{Key: "following", Value: targetID}}},
+		{Key: "$inc", Value: bson.D{{Key: "following_count", Value: 1}}},
+	}
+	res, err := r.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
 	}
-	defer session.EndSession(ctx)
+	if res.ModifiedCount == 0 {
+		return fmt.Errorf("already following or user not found")
+	}
 
-	_, err = session.WithTransaction(ctx, func(sc mongo.SessionContext) (interface{}, error) {
-		var (
-			filter primitive.M
-			update primitive.D
-		)
+	filter = bson.M{
+		"_id":       targetID,
+		"followers": bson.M{"$ne": followerID},
+	}
+	update = bson.D{
+		{Key: "$addToSet", Value: bson.D{{Key: "followers", Value: followerID}}},
+		{Key: "$inc", Value: bson.D{{Key: "followers_count", Value: 1}}},
+	}
+	res, err = r.collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+	if res.ModifiedCount == 0 {
+		return fmt.Errorf("already followed or user not found")
+	}
 
-		filter = bson.M{
-			"_id":       followerID,
-			"following": bson.M{"$ne": targetID},
-		}
-		update = bson.D{
-			{Key: "$addToSet", Value: bson.D{{Key: "following", Value: targetID}}},
-			{Key: "$inc", Value: bson.D{{Key: "following_count", Value: 1}}},
-		}
-		res, err := r.collection.UpdateOne(sc, filter, update)
-		if err != nil {
-			return nil, err
-		}
-		if res.ModifiedCount == 0 {
-			return nil, fmt.Errorf("already following or user not found")
-		}
-
-		filter = bson.M{
-			"_id":       targetID,
-			"followers": bson.M{"$ne": followerID},
-		}
-		update = bson.D{
-			{Key: "$addToSet", Value: bson.D{{Key: "followers", Value: followerID}}},
-			{Key: "$inc", Value: bson.D{{Key: "followers_count", Value: 1}}},
-		}
-		res, err = r.collection.UpdateOne(sc, filter, update)
-		if err != nil {
-			return nil, err
-		}
-		if res.ModifiedCount == 0 {
-			return nil, fmt.Errorf("already followed or user not found")
-		}
-
-		return nil, nil
-	})
-
-	return err
+	return nil
 }
 
 // DeleteFollow - функция, выполняющая удаление подписки
@@ -169,49 +157,38 @@ func (r *UserRepository) DeleteFollow(followerID, targetID primitive.ObjectID) e
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	client := r.collection.Database().Client()
+	var (
+		filter primitive.M
+		update primitive.D
+	)
 
-	session, err := client.StartSession()
+	filter = bson.M{"_id": followerID, "following": targetID}
+	update = bson.D{
+		{Key: "$pull", Value: bson.D{{Key: "following", Value: targetID}}},
+		{Key: "$inc", Value: bson.D{{Key: "following_count", Value: -1}}},
+	}
+	res, err := r.collection.UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
 	}
-	defer session.EndSession(ctx)
+	if res.ModifiedCount == 0 {
+		return fmt.Errorf("already unfollowing or user not found")
+	}
 
-	_, err = session.WithTransaction(ctx, func(sc mongo.SessionContext) (interface{}, error) {
-		var (
-			filter primitive.M
-			update primitive.D
-		)
+	filter = bson.M{"_id": targetID, "followers": followerID}
+	update = bson.D{
+		{Key: "$pull", Value: bson.D{{Key: "followers", Value: followerID}}},
+		{Key: "$inc", Value: bson.D{{Key: "followers_count", Value: -1}}},
+	}
+	res, err = r.collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		return err
+	}
+	if res.ModifiedCount == 0 {
+		return fmt.Errorf("already unfollowed or user not found")
+	}
 
-		filter = bson.M{"_id": followerID, "following": targetID}
-		update = bson.D{
-			{Key: "$pull", Value: bson.D{{Key: "following", Value: targetID}}},
-			{Key: "$inc", Value: bson.D{{Key: "following_count", Value: -1}}},
-		}
-		res, err := r.collection.UpdateOne(sc, filter, update)
-		if err != nil {
-			return nil, err
-		}
-		if res.ModifiedCount == 0 {
-			return nil, fmt.Errorf("already unfollowing or user not found")
-		}
-
-		filter = bson.M{"_id": targetID, "followers": followerID}
-		update = bson.D{
-			{Key: "$pull", Value: bson.D{{Key: "followers", Value: followerID}}},
-			{Key: "$inc", Value: bson.D{{Key: "followers_count", Value: -1}}},
-		}
-		res, err = r.collection.UpdateOne(sc, filter, update)
-		if err != nil {
-			return nil, err
-		}
-		if res.ModifiedCount == 0 {
-			return nil, fmt.Errorf("already unfollowed or user not found")
-		}
-
-		return nil, nil
-	})
-	return err
+	return nil
 }
 
 // TODO: - Will be done later

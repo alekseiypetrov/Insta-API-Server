@@ -18,7 +18,6 @@ func setupRoutes(r *gin.Engine, h *handler.UserHandler, m *jwt.Manager) {
 	{
 		users := r.Group("/users")
 		users.GET("/:id", h.GetUser)
-		// users.GET("/:id/following", h.GetFollowing)
 
 		authUsers := users.Group("")
 		authUsers.Use(middleware.AuthMiddleware(m))

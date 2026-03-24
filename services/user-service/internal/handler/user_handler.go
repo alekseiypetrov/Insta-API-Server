@@ -157,12 +157,3 @@ func (h *UserHandler) DeleteFollow(c *gin.Context) {
 // func (h *UserHandler) UpdateAvatar(c *gin.Context) {
 // 	c.JSON(200, gin.H{"message": "ok"})
 // }
-
-// GetFollowing - метод, возвращающий количество подписчиков
-// func (h *UserHandler) GetFollowing(c *gin.Context) {
-// 	id := c.Param("id")
-// 	c.JSON(200, gin.H{
-// 		"id":      id,
-// 		"message": "ok",
-// 	})
-// }

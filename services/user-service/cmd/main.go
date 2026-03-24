@@ -6,10 +6,10 @@ import (
 )
 
 func main() {
-	app, err := app.NewApp()
+	application, err := app.NewApp()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	app.Router.Run(":8080")
+	application.Router.Run(":8080")
 }

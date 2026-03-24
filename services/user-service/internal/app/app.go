@@ -25,12 +25,17 @@ func NewApp() (*App, error) {
 
 	r := gin.Default()
 
-	db, err := database.ConnectMongo(envConfig.MongoURI)
+	mongo, err := database.ConnectMongo(envConfig.MongoURI, envConfig.MongoDBName)
 	if err != nil {
 		return nil, err
 	}
 	jwtManager := jwt.NewManager(envConfig.JWTSecret)
-	userRepo := repository.NewUserRepository(db)
+
+	userRepo := repository.NewUserRepository(mongo)
+	if err := userRepo.CreateIndexes(); err != nil {
+		return nil, err
+	}
+
 	authService := service.NewAuthService(userRepo, jwtManager)
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(authService, userService)

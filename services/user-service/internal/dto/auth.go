@@ -10,7 +10,7 @@ type LoginRequest struct {
 // RegisterRequest - модель запроса
 // для регистрации нового пользователя
 type RegisterRequest struct {
-	Tag          string `json:"tag" binding:"required,tag"`
-	Password     string `json:"password" binding:"required,password"`
-	SecretAnswer string `json:"secret_answer" binding:"required,secret_answer"`
+	Tag          string `json:"tag" binding:"required,min=2"`
+	Password     string `json:"password" binding:"required,min=8,max=40"`
+	SecretAnswer string `json:"secret_answer" binding:"required,min=4,max=40"`
 }

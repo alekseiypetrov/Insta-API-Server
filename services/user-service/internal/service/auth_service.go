@@ -65,7 +65,7 @@ func (s *AuthService) SignIn(req dto.LoginRequest) (string, error) {
 		return "", fmt.Errorf("invalid credentials")
 	}
 
-	token, err := s.jwtManager.GenerateToken(user.ID.String())
+	token, err := s.jwtManager.GenerateToken(user.ID.Hex())
 	if err != nil {
 		return "", fmt.Errorf("failed to create token")
 	}

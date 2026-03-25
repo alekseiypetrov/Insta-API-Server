@@ -3,8 +3,8 @@ package dto
 // LoginRequest - модель запроса
 // для входа в существующий аккаунт
 type LoginRequest struct {
-	Tag      string `json:"tag" binding:"required,tag"`
-	Password string `json:"password" binding:"required,password"`
+	Tag      string `json:"tag" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 // RegisterRequest - модель запроса

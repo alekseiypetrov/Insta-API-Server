@@ -14,17 +14,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const (
-	collectionName string = "users"
-)
-
 // UserRepository - репозиторий, выполняющий запросы к БД
 type UserRepository struct {
 	collection *mongo.Collection
 }
 
 // NewUserRepository - конструктор репозитория
-func NewUserRepository(db *database.Mongo) *UserRepository {
+func NewUserRepository(db *database.Mongo, collectionName string) *UserRepository {
 	return &UserRepository{
 		collection: db.DB.Collection(collectionName),
 	}

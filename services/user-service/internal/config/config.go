@@ -10,9 +10,10 @@ import (
 // Config - стурктура,
 // хранящая значения по ключам env-файла
 type Config struct {
-	MongoURI    string
-	MongoDBName string
-	JWTSecret   string
+	MongoURI            string
+	MongoDBName         string
+	MongoCollectionName string
+	JWTSecret           string
 }
 
 // LoadConfig - конструктор конфига
@@ -21,9 +22,10 @@ func LoadConfig() (*Config, error) {
 	godotenv.Load()
 
 	cfg := &Config{
-		MongoURI:    os.Getenv("MONGO_URI"),
-		MongoDBName: os.Getenv("MONGO_DB"),
-		JWTSecret:   os.Getenv("JWT_SECRET"),
+		MongoURI:            os.Getenv("MONGO_URI"),
+		MongoDBName:         os.Getenv("MONGO_DB"),
+		MongoCollectionName: os.Getenv("MONGO_COLLECTION_NAME"),
+		JWTSecret:           os.Getenv("JWT_SECRET"),
 	}
 
 	if cfg.JWTSecret == "" {
@@ -32,6 +34,8 @@ func LoadConfig() (*Config, error) {
 		return nil, fmt.Errorf("MONGO_URI is not set")
 	} else if cfg.MongoDBName == "" {
 		return nil, fmt.Errorf("MONGO_DB is not set")
+	} else if cfg.MongoCollectionName == "" {
+		return nil, fmt.Errorf("MONGO_COLLECTION_NAME is not set")
 	}
 
 	return cfg, nil

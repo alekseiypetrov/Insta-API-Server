@@ -32,7 +32,7 @@ func NewApp() (*App, error) {
 	}
 	jwtManager := jwt.NewManager(envConfig.JWTSecret)
 
-	userRepo := repository.NewUserRepository(mongo)
+	userRepo := repository.NewUserRepository(mongo, envConfig.MongoCollectionName)
 	if err := userRepo.CreateIndexes(); err != nil {
 		return nil, err
 	}

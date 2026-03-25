@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
-	"user-service/internal/model"
-	"user-service/internal/repository"
+	"project/services/user-service/internal/model"
+	"project/services/user-service/internal/repository"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

@@ -3,9 +3,10 @@ package repository
 import (
 	"context"
 	"fmt"
+	"project/services/user-service/internal/model"
 	"time"
-	"user-service/internal/database"
-	"user-service/internal/model"
+
+	"project/pkg/database"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

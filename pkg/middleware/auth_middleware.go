@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"user-service/internal/jwt"
+	"project/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )

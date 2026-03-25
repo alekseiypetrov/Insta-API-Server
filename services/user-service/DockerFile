@@ -7,5 +7,5 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o user-service ./cmd/main.go
+RUN go build -o user-service ./services/user-service/cmd/main.go
 CMD ["./user-service"]

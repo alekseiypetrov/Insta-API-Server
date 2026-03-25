@@ -2,10 +2,11 @@ package service
 
 import (
 	"fmt"
+	"project/services/user-service/internal/dto"
+	"project/services/user-service/internal/repository"
 	"strings"
-	"user-service/internal/dto"
-	"user-service/internal/jwt"
-	"user-service/internal/repository"
+
+	"project/pkg/jwt"
 
 	"golang.org/x/crypto/bcrypt"
 )

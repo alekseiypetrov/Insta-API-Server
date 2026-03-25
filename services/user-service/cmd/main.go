@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"user-service/internal/app"
+	"project/services/user-service/internal/app"
 )
 
 func main() {

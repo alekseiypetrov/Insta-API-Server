@@ -1,9 +1,10 @@
 package app
 
 import (
-	"user-service/internal/handler"
-	"user-service/internal/jwt"
-	"user-service/internal/middleware"
+	"project/services/user-service/internal/handler"
+
+	"project/pkg/jwt"
+	"project/pkg/middleware"
 
 	"github.com/gin-gonic/gin"
 )

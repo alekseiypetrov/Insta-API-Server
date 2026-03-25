@@ -1,8 +1,8 @@
 package helper
 
 import (
-	"user-service/internal/dto"
-	"user-service/internal/model"
+	"project/services/user-service/internal/dto"
+	"project/services/user-service/internal/model"
 )
 
 // ToUserResponse - функция, преобразующая User из model

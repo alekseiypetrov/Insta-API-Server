@@ -1,12 +1,13 @@
 package app
 
 import (
-	"user-service/internal/config"
-	"user-service/internal/database"
-	"user-service/internal/handler"
-	"user-service/internal/jwt"
-	"user-service/internal/repository"
-	"user-service/internal/service"
+	"project/services/user-service/internal/config"
+	"project/services/user-service/internal/handler"
+	"project/services/user-service/internal/repository"
+	"project/services/user-service/internal/service"
+
+	"project/pkg/database"
+	"project/pkg/jwt"
 
 	"github.com/gin-gonic/gin"
 )

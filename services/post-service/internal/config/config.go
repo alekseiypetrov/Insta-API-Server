@@ -25,7 +25,7 @@ func LoadConfig() (*Config, error) {
 		JWTSecret:           os.Getenv("JWT_SECRET"),
 		MongoURI:            os.Getenv("MONGO_URI"),
 		MongoDBName:         os.Getenv("MONGO_DB"),
-		MongoCollectionName: "MONGO_COLLECTION_NAME",
+		MongoCollectionName: os.Getenv("MONGO_COLLECTION_NAME"),
 	}
 
 	switch {

@@ -20,10 +20,21 @@ services:
       - "8081:8080"
     depends_on:
       - mongo
-    environment:
-      MONGO_URI: mongodb://mongo:27017
-      MONGO_DB: app
-      JWT_SECRET: supersecret
+    env_file:
+      - ./services/user-serivce/.env
+
+  post-service:
+    build:
+      context: .
+      dockerfile: ./serivces/post-service/Dockerfile
+    container_name: post-service
+    restart: always
+    ports:
+      - "8082:8080"
+    depends_on:
+      - mongo
+    env_file:
+      - ./services/post-service/.env
 
 volumes:
   mongo_data:

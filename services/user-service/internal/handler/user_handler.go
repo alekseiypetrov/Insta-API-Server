@@ -120,7 +120,7 @@ func (h *UserHandler) SetFollow(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{"message": "ok"})
+	c.JSON(200, gin.H{"status": "ok"})
 }
 
 // DeleteFollow - метод, выполняющий отписку
@@ -148,7 +148,7 @@ func (h *UserHandler) DeleteFollow(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, gin.H{"message": "ok"})
+	c.JSON(200, gin.H{"status": "ok"})
 }
 
 // TODO: - Will be done later

@@ -82,6 +82,25 @@ func (s *UserService) UnfollowUser(firstID, secondID string) error {
 	return nil
 }
 
+// GetFollowings - метод, возвращающий список id
+func (s *UserService) GetFollowings(userID string) ([]string, error) {
+	id, err := primitive.ObjectIDFromHex(userID)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user id")
+	}
+
+	followingsID, err := s.userRepo.QueryFollowings(id)
+	if err != nil {
+		return nil, err
+	}
+
+	followingsStr := make([]string, len(followingsID))
+	for i, following := range followingsID {
+		followingsStr[i] = following.Hex()
+	}
+	return followingsStr, nil
+}
+
 // TODO: - Will be done later
 
 // UpdateAvatar - метод, обновляющий аватар пользователя

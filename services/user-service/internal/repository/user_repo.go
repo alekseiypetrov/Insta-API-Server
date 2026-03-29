@@ -104,6 +104,31 @@ func (r *UserRepository) QueryProfile(id primitive.ObjectID) (model.User, error)
 	return result, nil
 }
 
+// QueryFollowings - метод, возвращающий список подписок пользователя
+func (r *UserRepository) QueryFollowings(userID primitive.ObjectID) ([]primitive.ObjectID, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"_id": userID}
+	projection := bson.M{
+		"_id":             0,
+		"tag":             0,
+		"password":        0,
+		"secret_answer":   0,
+		"avatar_url":      0,
+		"following_count": 0,
+		"followers_count": 0,
+		"followers":       0,
+	}
+	opts := options.FindOne().SetProjection(projection)
+
+	var result model.FollowingResult
+	if err := r.collection.FindOne(ctx, filter, opts).Decode(&result); err != nil {
+		return nil, err
+	}
+	return result.Following, nil
+}
+
 // InsertFollow - функция, выполняющая оформление подписки
 func (r *UserRepository) InsertFollow(followerID, targetID primitive.ObjectID) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

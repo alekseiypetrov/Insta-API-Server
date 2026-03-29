@@ -23,6 +23,7 @@ func setupRoutes(r *gin.Engine, h *handler.UserHandler, m *jwt.Manager) {
 		authUsers := users.Group("")
 		authUsers.Use(middleware.AuthMiddleware(m))
 		authUsers.GET("/me", h.GetMe)
+		authUsers.GET("/me/following", h.GetFollowings)
 		// authUsers.PUT("/me/avatar", h.UpdateAvatar)
 		authUsers.POST("/:id/follow", h.SetFollow)
 		authUsers.DELETE("/:id/follow", h.DeleteFollow)

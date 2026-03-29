@@ -151,6 +151,33 @@ func (h *UserHandler) DeleteFollow(c *gin.Context) {
 	c.JSON(200, gin.H{"status": "ok"})
 }
 
+// GetFollowings - метод, возвращающий
+// подписки пользователя в виде списка id
+func (h *UserHandler) GetFollowings(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	id, ok := userID.(string)
+	if !ok {
+		c.JSON(500, gin.H{"error": "internal error"})
+		return
+	}
+
+	followings, err := h.userService.GetFollowings(id)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"data":   followings,
+		"status": "ok",
+	})
+}
+
 // TODO: - Will be done later
 
 // UpdateAvatar - метод, обновляющий аватар пользователя

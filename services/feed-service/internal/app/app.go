@@ -23,8 +23,8 @@ func NewApp() (*App, error) {
 		return nil, err
 	}
 
-	userClient := client.NewUserClient()
-	postClient := client.NewPostClient()
+	userClient := client.NewUserClient(envCfg.UserServiceURL)
+	postClient := client.NewPostClient(envCfg.PostServiceURL)
 	jwtManager := jwt.NewManager(envCfg.JWTSecret)
 	feedService := service.NewFeedService(userClient, postClient)
 	feedHandler := handler.NewFeedHandler(feedService)

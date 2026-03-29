@@ -21,12 +21,12 @@ services:
     depends_on:
       - mongo
     env_file:
-      - ./services/user-serivce/.env
+      - ./services/user-service/.env
 
   post-service:
     build:
       context: .
-      dockerfile: ./serivces/post-service/Dockerfile
+      dockerfile: ./services/post-service/Dockerfile
     container_name: post-service
     restart: always
     ports:
@@ -35,6 +35,20 @@ services:
       - mongo
     env_file:
       - ./services/post-service/.env
+
+  feed-service:
+    build:
+      context: .
+      dockerfile: ./services/feed-service/Dockerfile
+    container_name: feed-service
+    restart: always
+    ports:
+      - "8083:8080"
+    depends_on:
+      - user-service
+      - post-service
+    env_file:
+      - ./services/feed-service/.env
 
 volumes:
   mongo_data:

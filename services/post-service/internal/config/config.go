@@ -19,7 +19,7 @@ type Config struct {
 // LoadConfig - конструктор конфига
 // при отсутствии одного из ключа возвращает ошибку
 func LoadConfig() (*Config, error) {
-	godotenv.Load()
+	_ = godotenv.Load()
 
 	cfg := &Config{
 		JWTSecret:           os.Getenv("JWT_SECRET"),

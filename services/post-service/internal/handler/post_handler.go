@@ -76,7 +76,7 @@ func (h *PostHandler) GetAllPostsOfUser(c *gin.Context) {
 	}
 
 	response := helper.ToListPostResponse(posts)
-	c.JSON(200, gin.H{"data": response})
+	c.JSON(200, response)
 }
 
 // SetLike - поставить лайк под заданным постом

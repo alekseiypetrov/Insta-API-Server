@@ -5,7 +5,7 @@ type SinglePostResponse struct {
 	ID         string `json:"id"`
 	AuthorID   string `json:"author_id"`
 	Content    string `json:"content"`
-	LikesCount int    `bson:"likes_count"`
+	LikesCount int    `json:"likes_count"`
 	CreatedAt  string `json:"created_at"`
 }
 

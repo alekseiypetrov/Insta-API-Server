@@ -21,13 +21,13 @@ func NewPostService(r *repository.PostRepository) *PostService {
 }
 
 // CreatePost - публикация нового поста
-func (s *PostService) CreatePost(req dto.CreatePostRequest, authorID string) (string, error) {
+func (s *PostService) CreatePost(req dto.CreatePostRequest, authorID, authorTag string) (string, error) {
 	ID, err := primitive.ObjectIDFromHex(authorID)
 	if err != nil {
 		return "", fmt.Errorf("invalid author id")
 	}
 
-	postID, err := s.repository.CreatePost(req.Content, ID)
+	postID, err := s.repository.CreatePost(req.Content, authorTag, ID)
 	if err != nil {
 		return "", fmt.Errorf("failed to create post: %w", err)
 	}

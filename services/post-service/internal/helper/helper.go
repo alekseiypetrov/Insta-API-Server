@@ -13,6 +13,7 @@ func ToSinglePostResponse(postModel model.Post) dto.SinglePostResponse {
 	return dto.SinglePostResponse{
 		ID:         postModel.ID.Hex(),
 		AuthorID:   postModel.AuthorID.Hex(),
+		AuthorTag:  postModel.AuthorTag,
 		Content:    postModel.Content,
 		LikesCount: postModel.LikesCount,
 		CreatedAt:  postModel.CreatedAt.Format(time.RFC3339),

@@ -9,9 +9,20 @@ import (
 
 // Manager - менеджер по JWT-токенам
 // он их создает, выдает и проверяет
-type Manager struct {
-	secret string
-}
+type (
+	// Manager - менеджер по JWT-токенам
+	// он их создает, выдает и проверяет
+	Manager struct {
+		secret string
+	}
+
+	// Response - структура, в которую
+	// кладется информация, извлеченная из JWT-токена
+	Response struct {
+		ID  string
+		Tag string
+	}
+)
 
 // NewManager - конструктор менеджера JWT
 func NewManager(secret string) *Manager {
@@ -21,9 +32,10 @@ func NewManager(secret string) *Manager {
 }
 
 // GenerateToken - создает JWT-токен
-func (m *Manager) GenerateToken(userID string) (string, error) {
+func (m *Manager) GenerateToken(userID, tag string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
+		"tag":     tag,
 		"exp":     time.Now().Add(48 * time.Hour).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -31,7 +43,7 @@ func (m *Manager) GenerateToken(userID string) (string, error) {
 }
 
 // VerifyToken - разборка и проверка токена
-func (m *Manager) VerifyToken(tokenString string) (string, error) {
+func (m *Manager) VerifyToken(tokenString string) (Response, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method %v", token.Header["alg"])
@@ -39,22 +51,32 @@ func (m *Manager) VerifyToken(tokenString string) (string, error) {
 		return []byte(m.secret), nil
 	})
 
+	var req Response
+
 	switch {
 	case err != nil:
-		return "", err
+		return req, err
 	case !token.Valid:
-		return "", fmt.Errorf("invalid token")
+		return req, fmt.Errorf("invalid token")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return "", fmt.Errorf("invalid claims")
+		return req, fmt.Errorf("invalid claims")
 	}
 
 	userID, ok := claims["user_id"].(string)
 	if !ok {
-		return "", fmt.Errorf("user_id not found")
+		return req, fmt.Errorf("user_id not found")
 	}
 
-	return userID, nil
+	tag, ok := claims["tag"].(string)
+	if !ok {
+		return req, fmt.Errorf("tag not found")
+	}
+
+	req.ID = userID
+	req.Tag = tag
+
+	return req, nil
 }

@@ -19,13 +19,13 @@ type Config struct {
 // LoadConfig - конструктор конфига
 // при отсутствии одного из ключа возвращает ошибку
 func LoadConfig() (*Config, error) {
-	godotenv.Load()
+	_ = godotenv.Load()
 
 	cfg := &Config{
 		JWTSecret:           os.Getenv("JWT_SECRET"),
 		MongoURI:            os.Getenv("MONGO_URI"),
 		MongoDBName:         os.Getenv("MONGO_DB"),
-		MongoCollectionName: "MONGO_COLLECTION_NAME",
+		MongoCollectionName: os.Getenv("MONGO_COLLECTION_NAME"),
 	}
 
 	switch {

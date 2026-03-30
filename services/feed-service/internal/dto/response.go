@@ -9,8 +9,3 @@ type SinglePostResponse struct {
 	LikesCount int    `json:"likes_count"`
 	CreatedAt  string `json:"created_at"`
 }
-
-// ListPostResponse - ответ сервера в виде списка постов
-type ListPostResponse struct {
-	Data []SinglePostResponse `json:"data"`
-}

@@ -16,6 +16,7 @@ type App struct {
 	Router *gin.Engine
 }
 
+// NewApp - конструктор экземпляра приложения
 func NewApp() (*App, error) {
 	r := gin.Default()
 	envCfg, err := config.LoadConfig()

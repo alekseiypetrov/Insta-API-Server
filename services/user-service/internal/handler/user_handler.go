@@ -32,7 +32,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 	}
 
 	response := helper.ToUserResponse(user)
-	c.JSON(200, gin.H{"data": response})
+	c.JSON(200, response)
 }
 
 // GetMe - метод, возвращающий свой профиль
@@ -56,7 +56,7 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 	}
 
 	response := helper.ToUserResponse(user)
-	c.JSON(200, gin.H{"data": response})
+	c.JSON(200, response)
 }
 
 // RegisterUser - метод, осуществляющий регистрацию нового пользователя
@@ -149,6 +149,32 @@ func (h *UserHandler) DeleteFollow(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"status": "ok"})
+}
+
+// GetFollowings - метод, возвращающий
+// подписки пользователя в виде списка id
+func (h *UserHandler) GetFollowings(c *gin.Context) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+
+	id, ok := userID.(string)
+	if !ok {
+		c.JSON(500, gin.H{"error": "internal error"})
+		return
+	}
+
+	followings, err := h.userService.GetFollowings(id)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"followings": followings,
+	})
 }
 
 // TODO: - Will be done later

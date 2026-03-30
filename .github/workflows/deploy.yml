@@ -40,11 +40,23 @@ jobs:
           JWT_SECRET=${JWT_SECRET}
           EOF
 
+      - name: FULL DEBUG
+        run: |
+          pwd
+          ls -R
+
+      - name: Verify structure
+        run: |
+          ls services/user-service
+          ls services/post-service
+          ls services/feed-service
+
       - name: Build services
         run: docker-compose build
+        working-directory: .
 
       - name: Run services
-        run: docker-compose up -d
+        run: docker-compose up
 
       - name: Check running containers
         run: docker ps

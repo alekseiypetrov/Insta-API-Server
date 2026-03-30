@@ -18,8 +18,8 @@ services:
       - "8081:8080"
     depends_on:
       - mongo
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
 
   post-service:
     image: alekseiypetrov/post-service:latest
@@ -29,8 +29,8 @@ services:
       - "8082:8080"
     depends_on:
       - mongo
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
 
   feed-service:
     image: alekseiypetrov/feed-service:latest
@@ -41,8 +41,8 @@ services:
     depends_on:
       - user-service
       - post-service
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
 
 volumes:
   mongo_data:

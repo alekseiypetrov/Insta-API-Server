@@ -26,6 +26,7 @@ go.work
 
 # Hide secrets
 .env
+services/*/.env
 .env.*
 !.env.example
 

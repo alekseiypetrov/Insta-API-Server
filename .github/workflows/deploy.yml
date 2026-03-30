@@ -85,6 +85,9 @@ jobs:
           name: user-service
           path: ./services/user-service/
 
+      - name: Copy .env to user-service
+        run: cp .env ./services/user-service/
+
       - name: Build user image
         run: |
           docker build -t ${{ vars.DOCKER_USERNAME }}/user-service:latest ./services/user-service
@@ -99,6 +102,9 @@ jobs:
           name: post-service
           path: ./services/post-service/
 
+      - name: Copy .env to post-service
+        run: cp .env ./services/post-service/
+
       - name: Build post image
         run: |
           docker build -t ${{ vars.DOCKER_USERNAME }}/post-service:latest ./services/post-service
@@ -112,6 +118,9 @@ jobs:
         with:
           name: feed-service
           path: ./services/feed-service/
+
+      - name: Copy .env to feed-service
+        run: cp .env ./services/feed-service/
 
       - name: Build feed image
         run: |

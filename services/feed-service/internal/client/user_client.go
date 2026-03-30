@@ -46,14 +46,12 @@ func (c *UserClient) GetFollowing(token string) ([]string, error) {
 	}
 
 	var result struct {
-		Data struct{
-			Followings []string `json:"followings"`
-		} `json:"data"`
+		Followings []string `json:"followings"`
 	}
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return nil, err
 	}
 
-	return result.Data.Followings, nil
+	return result.Followings, nil
 }

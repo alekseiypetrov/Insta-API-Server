@@ -4,6 +4,7 @@ package dto
 type SinglePostResponse struct {
 	ID         string `json:"id"`
 	AuthorID   string `json:"author_id"`
+	AuthorTag  string `json:"author_tag"`
 	Content    string `json:"content"`
 	LikesCount int    `json:"likes_count"`
 	CreatedAt  string `json:"created_at"`

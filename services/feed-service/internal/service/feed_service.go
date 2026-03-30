@@ -38,7 +38,7 @@ func (s *FeedService) GetFeed(token string) ([]dto.SinglePostResponse, error) {
 	}
 
 	sort.Slice(feed, func(i, j int) bool {
-		return feed[i].CreatedAt > feed[j].CreatedAt
+		return feed[i].CreatedAt < feed[j].CreatedAt
 	})
 
 	return feed, nil

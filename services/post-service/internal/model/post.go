@@ -11,6 +11,7 @@ import (
 type Post struct {
 	ID         primitive.ObjectID   `bson:"_id,omitempty"`
 	AuthorID   primitive.ObjectID   `bson:"author_id"`
+	AuthorTag  string               `bson:"author_tag"`
 	Content    string               `bson:"content"`
 	LikesCount int                  `bson:"likes_count"`
 	Likers     []primitive.ObjectID `bson:"likers"`

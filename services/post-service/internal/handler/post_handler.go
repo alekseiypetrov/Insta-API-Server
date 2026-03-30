@@ -39,7 +39,18 @@ func (h *PostHandler) CreatePost(c *gin.Context) {
 		return
 	}
 
-	postID, err := h.service.CreatePost(req, authorID)
+	tag, exists := c.Get("tag")
+	if !exists {
+		c.JSON(401, gin.H{"error": "unauthorized"})
+		return
+	}
+	authorTag, ok := tag.(string)
+	if !ok {
+		c.JSON(500, gin.H{"error": "internal error"})
+		return
+	}
+
+	postID, err := h.service.CreatePost(req, authorID, authorTag)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "internal error"})
 		return

@@ -28,12 +28,13 @@ func NewPostRepository(connection *database.Mongo, collectionName string) *PostR
 }
 
 // CreatePost - публикация нового поста
-func (r *PostRepository) CreatePost(content string, authorID primitive.ObjectID) (string, error) {
+func (r *PostRepository) CreatePost(content, tag string, authorID primitive.ObjectID) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	newPost := model.Post{
 		AuthorID:   authorID,
+		AuthorTag:  tag,
 		Content:    content,
 		LikesCount: 0,
 		Likers:     []primitive.ObjectID{},

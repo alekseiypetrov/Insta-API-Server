@@ -32,7 +32,7 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 	}
 
 	response := helper.ToUserResponse(user)
-	c.JSON(200, gin.H{"data": response})
+	c.JSON(200, response)
 }
 
 // GetMe - метод, возвращающий свой профиль
@@ -56,7 +56,7 @@ func (h *UserHandler) GetMe(c *gin.Context) {
 	}
 
 	response := helper.ToUserResponse(user)
-	c.JSON(200, gin.H{"data": response})
+	c.JSON(200, response)
 }
 
 // RegisterUser - метод, осуществляющий регистрацию нового пользователя
@@ -173,8 +173,7 @@ func (h *UserHandler) GetFollowings(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"data":   followings,
-		"status": "ok",
+		"followings": followings,
 	})
 }
 

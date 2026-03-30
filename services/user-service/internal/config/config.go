@@ -24,7 +24,7 @@ func LoadConfig() (*Config, error) {
 	cfg := &Config{
 		MongoURI:            os.Getenv("MONGO_URI"),
 		MongoDBName:         os.Getenv("MONGO_DB"),
-		MongoCollectionName: os.Getenv("MONGO_COLLECTION_NAME"),
+		MongoCollectionName: os.Getenv("USER_MONGO_COLLECTION_NAME"),
 		JWTSecret:           os.Getenv("JWT_SECRET"),
 	}
 
@@ -35,7 +35,7 @@ func LoadConfig() (*Config, error) {
 	} else if cfg.MongoDBName == "" {
 		return nil, fmt.Errorf("MONGO_DB is not set")
 	} else if cfg.MongoCollectionName == "" {
-		return nil, fmt.Errorf("MONGO_COLLECTION_NAME is not set")
+		return nil, fmt.Errorf("USER_MONGO_COLLECTION_NAME is not set")
 	}
 
 	return cfg, nil

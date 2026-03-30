@@ -21,7 +21,7 @@ services:
     depends_on:
       - mongo
     env_file:
-      - ./services/user-service/.env
+      - .env
 
   post-service:
     build:
@@ -34,7 +34,7 @@ services:
     depends_on:
       - mongo
     env_file:
-      - ./services/post-service/.env
+      - .env
 
   feed-service:
     build:
@@ -48,7 +48,7 @@ services:
       - user-service
       - post-service
     env_file:
-      - ./services/feed-service/.env
+      - .env
 
 volumes:
   mongo_data:

@@ -25,7 +25,7 @@ func LoadConfig() (*Config, error) {
 		JWTSecret:           os.Getenv("JWT_SECRET"),
 		MongoURI:            os.Getenv("MONGO_URI"),
 		MongoDBName:         os.Getenv("MONGO_DB"),
-		MongoCollectionName: os.Getenv("MONGO_COLLECTION_NAME"),
+		MongoCollectionName: os.Getenv("POST_MONGO_COLLECTION_NAME"),
 	}
 
 	switch {
@@ -36,7 +36,7 @@ func LoadConfig() (*Config, error) {
 	case cfg.MongoDBName == "":
 		return nil, fmt.Errorf("MONGO_DB is not set")
 	case cfg.MongoCollectionName == "":
-		return nil, fmt.Errorf("MONGO_COLLECTION_NAME is not set")
+		return nil, fmt.Errorf("POST_MONGO_COLLECTION_NAME is not set")
 	default:
 		return cfg, nil
 	}

@@ -7,13 +7,38 @@ on:
 jobs:
   build-and-run:
     runs-on: ubuntu-latest
+    env:
+      USER_SERVICE_URL: ${{ vars.USER_SERVICE_URL }}
+      POST_SERVICE_URL: ${{ vars.POST_SERVICE_URL }}
+
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      MONGO_DB: ${{ secrets.MONGO_DB }}
+      POST_MONGO_COLLECTION_NAME: ${{ secrets.POST_MONGO_COLLECTION_NAME }}
+      USER_MONGO_COLLECTION_NAME: ${{ secrets.USER_MONGO_COLLECTION_NAME }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
     steps:
+      - name: Install docker-compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Docker
         run: docker --version
+
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          USER_SERVICE_URL=${USER_SERVICE_URL}
+          POST_SERVICE_URL=${POST_SERVICE_URL}
+          MONGO_URI=${MONGO_URI}
+          MONGO_DB=${MONGO_DB}
+          POST_MONGO_COLLECTION_NAME=${POST_MONGO_COLLECTION_NAME}
+          USER_MONGO_COLLECTION_NAME=${USER_MONGO_COLLECTION_NAME}
+          JWT_SECRET=${JWT_SECRET}
+          EOF
 
       - name: Build services
         run: docker-compose build

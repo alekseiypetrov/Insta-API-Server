@@ -12,8 +12,8 @@ services:
 
   user-service:
     build:
-      context: .
-      dockerfile: services/user-service/Dockerfile
+      context: ./services/user-service
+      dockerfile: Dockerfile
     container_name: user-service
     restart: always
     ports:
@@ -25,8 +25,8 @@ services:
 
   post-service:
     build:
-      context: .
-      dockerfile: services/post-service/Dockerfile
+      context: ./services/post-service
+      dockerfile: Dockerfile
     container_name: post-service
     restart: always
     ports:
@@ -38,8 +38,8 @@ services:
 
   feed-service:
     build:
-      context: .
-      dockerfile: services/feed-service/Dockerfile
+      context: ./services/feed-service/
+      dockerfile: Dockerfile
     container_name: feed-service
     restart: always
     ports:

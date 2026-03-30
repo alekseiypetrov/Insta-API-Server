@@ -1,11 +1,8 @@
-FROM golang:1.25.6
+FROM alpine:latest
 
 WORKDIR /app
 
-COPY go.mod ./
-RUN go mod download
+COPY user-service .
+COPY .env .
 
-COPY . .
-
-RUN go build -o user-service ./services/user-service/cmd/main.go
 CMD ["./user-service"]

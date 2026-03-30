@@ -11,9 +11,7 @@ services:
       - mongo_data:/data/db
 
   user-service:
-    build:
-      context: .
-      dockerfile: ./services/user-service/Dockerfile
+    image: alekseiypetrov/user-service:latest
     container_name: user-service
     restart: always
     ports:
@@ -24,9 +22,7 @@ services:
       - .env
 
   post-service:
-    build:
-      context: .
-      dockerfile: ./services/post-service/Dockerfile
+    image: alekseiypetrov/post-service:latest
     container_name: post-service
     restart: always
     ports:
@@ -37,9 +33,7 @@ services:
       - .env
 
   feed-service:
-    build:
-      context: .
-      dockerfile: ./services/feed-service/Dockerfile
+    image: alekseiypetrov/feed-service:latest
     container_name: feed-service
     restart: always
     ports:

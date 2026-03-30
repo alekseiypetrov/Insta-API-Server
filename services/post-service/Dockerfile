@@ -1,11 +1,8 @@
-FROM golang:1.25.6
+FROM alpine:latest
 
 WORKDIR /app
 
-COPY go.mod ./
-RUN go mod download
+COPY post-service .
+COPY .env .
 
-COPY . .
-
-RUN go build -o post-service ./services/post-service/cmd/main.go
 CMD ["./post-service"]

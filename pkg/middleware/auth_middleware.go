@@ -9,6 +9,7 @@ import (
 const (
 	headerOfToken    = "Authorization"
 	contextUserIDKey = "user_id"
+	contextTagKey    = "tag"
 	bearerPrefix     = "Bearer "
 )
 
@@ -25,7 +26,7 @@ func AuthMiddleware(m *jwt.Manager) gin.HandlerFunc {
 
 		tokenString := authHeader[len(bearerPrefix):]
 
-		userID, err := m.VerifyToken(tokenString)
+		resp, err := m.VerifyToken(tokenString)
 		if err != nil {
 			c.AbortWithStatusJSON(401, gin.H{
 				"error": "invalid token",
@@ -33,7 +34,8 @@ func AuthMiddleware(m *jwt.Manager) gin.HandlerFunc {
 			return
 		}
 
-		c.Set(contextUserIDKey, userID)
+		c.Set(contextUserIDKey, resp.ID)
+		c.Set(contextTagKey, resp.Tag)
 		c.Next()
 	}
 }

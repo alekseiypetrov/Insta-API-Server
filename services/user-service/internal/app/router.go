@@ -24,7 +24,6 @@ func setupRoutes(r *gin.Engine, h *handler.UserHandler, m *jwt.Manager, s *obser
 	}
 	{
 		users := r.Group("/users")
-		users.GET("/:id", h.GetUser)
 		users.GET("/stats", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"version":        s.Version,
@@ -35,6 +34,7 @@ func setupRoutes(r *gin.Engine, h *handler.UserHandler, m *jwt.Manager, s *obser
 			})
 		})
 		users.GET("/metrics", gin.WrapH(promhttp.Handler()))
+		users.GET("/:id", h.GetUser)
 
 		authUsers := users.Group("")
 		authUsers.Use(middleware.AuthMiddleware(m))

@@ -17,7 +17,6 @@ func setupRoutes(r *gin.Engine, h *handler.PostHandler, m *jwt.Manager, s *obser
 	r.Use(middleware.MetricsMiddleware("post-service"))
 	{
 		posts := r.Group("/posts")
-		posts.GET("/:id", h.GetPost)
 		posts.GET("/stats", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"version":        s.Version,
@@ -28,6 +27,7 @@ func setupRoutes(r *gin.Engine, h *handler.PostHandler, m *jwt.Manager, s *obser
 			})
 		})
 		posts.GET("/metrics", gin.WrapH(promhttp.Handler()))
+		posts.GET("/:id", h.GetPost)
 
 		postsWithAuth := posts.Use(middleware.AuthMiddleware(m))
 		postsWithAuth.POST("", h.CreatePost)

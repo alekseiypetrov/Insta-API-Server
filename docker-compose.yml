@@ -10,43 +10,102 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  user-service:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - user-service-1
+      - user-service-2
+      - post-service-1
+      - post-service-2
+      - feed-service-1
+      - feed-service-2
+
+  user-service-1:
     image: alekseiypetrov/user-service:latest
-    container_name: user-service
+    container_name: user-service-1
     restart: always
-    ports:
-      - "8081:8080"
     depends_on:
       - mongo
-    # env_file:
-    #   - .env
 
-  post-service:
+  user-service-2:
+    image: alekseiypetrov/user-service:latest
+    container_name: user-service-2
+    restart: always
+    depends_on:
+      - mongo
+
+  # user-service:
+  #   image: alekseiypetrov/user-service:latest
+  #   container_name: user-service
+  #   restart: always
+  #   ports:
+  #     - "8081:8080"
+  #   depends_on:
+  #     - mongo
+  #   # env_file:
+  #   #   - .env
+
+  post-service-1:
     image: alekseiypetrov/post-service:latest
-    container_name: post-service
+    container_name: post-service-1
     restart: always
-    ports:
-      - "8082:8080"
     depends_on:
       - mongo
-    # env_file:
-    #   - .env
 
-  feed-service:
-    image: alekseiypetrov/feed-service:latest
-    container_name: feed-service
+  post-service-2:
+    image: alekseiypetrov/post-service:latest
+    container_name: post-service-2
     restart: always
-    ports:
-      - "8083:8080"
     depends_on:
-      - user-service
-      - post-service
-    # env_file:
-    #   - .env
+      - mongo
+
+  # post-service:
+  #   image: alekseiypetrov/post-service:latest
+  #   container_name: post-service
+  #   restart: always
+  #   ports:
+  #     - "8082:8080"
+  #   depends_on:
+  #     - mongo
+  #   # env_file:
+  #   #   - .env
+
+  feed-service-1:
+    image: alekseiypetrov/feed-service:latest
+    container_name: feed-service-1
+    restart: always
+    depends_on:
+      - user-service-1
+      - post-service-1
+
+  feed-service-2:
+    image: alekseiypetrov/feed-service:latest
+    container_name: feed-service-2
+    restart: always
+    depends_on:
+      - user-service-2
+      - post-service-2
+
+  # feed-service:
+  #   image: alekseiypetrov/feed-service:latest
+  #   container_name: feed-service
+  #   restart: always
+  #   ports:
+  #     - "8083:8080"
+  #   depends_on:
+  #     - user-service
+  #     - post-service
+  #   # env_file:
+  #   #   - .env
 
   otel-collector:
     image: otel/opentelemetry-collector:latest
-    command: ["--config=/etc/otel-config.yaml"]
+    command: [ "--config=/etc/otel-config.yaml" ]
     volumes:
       - ./otel-config.yaml:/etc/otel-config.yaml
     ports:

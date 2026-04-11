@@ -18,9 +18,7 @@ func setupRoutes(r *gin.Engine, h *handler.FeedHandler, m *jwt.Manager, s *obser
 	{
 		feed := r.Group("/feed")
 		feed.GET("/me", middleware.AuthMiddleware(m), h.GetFeed)
-	}
-	{
-		r.GET("/stats", func(c *gin.Context) {
+		feed.GET("/stats", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"version":        s.Version,
 				"started_at":     s.StartedAt,
@@ -29,6 +27,6 @@ func setupRoutes(r *gin.Engine, h *handler.FeedHandler, m *jwt.Manager, s *obser
 				"responses":      s.Responses,
 			})
 		})
-		r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+		feed.GET("/metrics", gin.WrapH(promhttp.Handler()))
 	}
 }

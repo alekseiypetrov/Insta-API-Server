@@ -18,14 +18,7 @@ func setupRoutes(r *gin.Engine, h *handler.PostHandler, m *jwt.Manager, s *obser
 	{
 		posts := r.Group("/posts")
 		posts.GET("/:id", h.GetPost)
-
-		postsWithAuth := posts.Use(middleware.AuthMiddleware(m))
-		postsWithAuth.POST("", h.CreatePost)
-		postsWithAuth.POST("/:id/like", h.SetLike)
-		postsWithAuth.DELETE("/:id/like", h.DeleteLike)
-	}
-	{
-		r.GET("/stats", func(c *gin.Context) {
+		posts.GET("/stats", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
 				"version":        s.Version,
 				"started_at":     s.StartedAt,
@@ -34,7 +27,12 @@ func setupRoutes(r *gin.Engine, h *handler.PostHandler, m *jwt.Manager, s *obser
 				"responses":      s.Responses,
 			})
 		})
-		r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+		posts.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
+		postsWithAuth := posts.Use(middleware.AuthMiddleware(m))
+		postsWithAuth.POST("", h.CreatePost)
+		postsWithAuth.POST("/:id/like", h.SetLike)
+		postsWithAuth.DELETE("/:id/like", h.DeleteLike)
 	}
 	{
 		r.GET("/users/:id/posts", h.GetAllPostsOfUser)

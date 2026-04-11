@@ -3,6 +3,7 @@ package app
 import (
 	"project/pkg/database"
 	"project/pkg/jwt"
+	"project/pkg/observability"
 	"project/services/post-service/internal/config"
 	"project/services/post-service/internal/handler"
 	"project/services/post-service/internal/repository"
@@ -28,12 +29,17 @@ func NewApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	stats := observability.NewStats("1.0.0")
+	observability.InitPrometheus()
+	observability.InitTracer("post-service")
+
 	jwtManager := jwt.NewManager(envCfg.JWTSecret)
 	postRepository := repository.NewPostRepository(mongo, envCfg.MongoCollectionName)
 	postService := service.NewPostService(postRepository)
 	postHandler := handler.NewPostHandler(postService)
 
-	setupRoutes(r, postHandler, jwtManager)
+	setupRoutes(r, postHandler, jwtManager, stats)
 
 	return &App{r}, nil
 }

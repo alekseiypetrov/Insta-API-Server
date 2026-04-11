@@ -8,6 +8,7 @@ import (
 
 	"project/pkg/database"
 	"project/pkg/jwt"
+	"project/pkg/observability"
 
 	"github.com/gin-gonic/gin"
 )
@@ -37,11 +38,15 @@ func NewApp() (*App, error) {
 		return nil, err
 	}
 
+	stats := observability.NewStats("1.0.0")
+	observability.InitPrometheus()
+	observability.InitTracer("user-service")
+
 	authService := service.NewAuthService(userRepo, jwtManager)
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(authService, userService)
 
-	setupRoutes(r, userHandler, jwtManager)
+	setupRoutes(r, userHandler, jwtManager, stats)
 
 	return &App{Router: r}, nil
 }

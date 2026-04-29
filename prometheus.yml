@@ -1,15 +1,36 @@
 global:
   scrape_interval: 5s
 
+# scrape_configs:
+#   - job_name: 'user-service'
+#     static_configs:
+#       - targets: ['user-service:8080']
+
+#   - job_name: 'post-service'
+#     static_configs:
+#       - targets: ['post-service:8080']
+
+#   - job_name: 'feed-service'
+#     static_configs:
+#       - targets: ['feed-service:8080']
 scrape_configs:
-  - job_name: 'user-service'
+  - job_name: "post-service"
+    metrics_path: /posts/metrics
     static_configs:
-      - targets: ['user-service:8080']
+      - targets:
+          - "post-service-1:8080"
+          - "post-service-2:8080"
 
-  - job_name: 'post-service'
+  - job_name: "user-service"
+    metrics_path: /users/metrics
     static_configs:
-      - targets: ['post-service:8080']
+      - targets:
+          - "user-service-1:8080"
+          - "user-service-2:8080"
 
-  - job_name: 'feed-service'
+  - job_name: "feed-service"
+    metrics_path: /feed/metrics
     static_configs:
-      - targets: ['feed-service:8080']
+      - targets:
+          - "feed-service-1:8080"
+          - "feed-service-2:8080"

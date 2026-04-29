@@ -9,6 +9,8 @@ services:
       MONGO_INITDB_DATABASE: app
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app-network
 
   nginx:
     image: nginx:latest
@@ -25,6 +27,8 @@ services:
       - post-service-2
       - feed-service-1
       - feed-service-2
+    networks:
+      - app-network
 
   user-service-1:
     image: alekseiypetrov/user-service:latest
@@ -32,6 +36,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    networks:
+      - app-network
 
   user-service-2:
     image: alekseiypetrov/user-service:latest
@@ -39,6 +45,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    networks:
+      - app-network
 
   # user-service:
   #   image: alekseiypetrov/user-service:latest
@@ -57,6 +65,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    networks:
+      - app-network
 
   post-service-2:
     image: alekseiypetrov/post-service:latest
@@ -64,6 +74,8 @@ services:
     restart: always
     depends_on:
       - mongo
+    networks:
+      - app-network
 
   # post-service:
   #   image: alekseiypetrov/post-service:latest
@@ -83,6 +95,8 @@ services:
     depends_on:
       - user-service-1
       - post-service-1
+    networks:
+      - app-network
 
   feed-service-2:
     image: alekseiypetrov/feed-service:latest
@@ -91,6 +105,8 @@ services:
     depends_on:
       - user-service-2
       - post-service-2
+    networks:
+      - app-network
 
   # feed-service:
   #   image: alekseiypetrov/feed-service:latest
@@ -111,6 +127,8 @@ services:
       - ./otel-config.yaml:/etc/otel-config.yaml
     ports:
       - "4317:4317"
+    networks:
+      - app-network
 
   prometheus:
     image: prom/prometheus
@@ -118,11 +136,20 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    networks:
+      - app-network
 
   grafana:
     image: grafana/grafana
     ports:
       - "3000:3000"
+    networks:
+      - app-network
 
 volumes:
   mongo_data:
+
+
+networks:
+  app-network:
+    driver: bridge
